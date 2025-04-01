@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { QuizService } from '../../services/quiz.service';
 import { AnswerComponent } from '../answer/answer.component';
 
 @Component({
@@ -7,4 +8,9 @@ import { AnswerComponent } from '../answer/answer.component';
   templateUrl: './question.component.html',
   styleUrl: './question.component.css',
 })
-export class QuestionComponent {}
+export class QuestionComponent {
+  _quizService = inject(QuizService);
+  currentQuestion =
+    this._quizService.questions()[this._quizService.currentQuestionIndex()]
+      .question;
+}

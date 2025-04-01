@@ -1,5 +1,7 @@
 <div>
-  <div class="question">This is the title of the first question.</div>
+  <div class="question">
+    {{ _quizService.currentQuestion().question }}
+  </div>
   <div class="answers">
     <quiz-answer />
     <quiz-answer />

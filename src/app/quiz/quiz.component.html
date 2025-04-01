@@ -1,7 +1,13 @@
 <div class="quiz">
   <div>
-    <div class="score">Question 1/10</div>
+    <div class="score">
+      Question {{ _quizService.currentQuestionIndex() + 1 }}/{{
+        _quizService.questions().length
+      }}
+    </div>
     <quiz-question />
-    <div class="next-button">Next question</div>
+    <div (click)="_quizService.goToNextQuestion()" class="next-button">
+      Next question
+    </div>
   </div>
 </div>
