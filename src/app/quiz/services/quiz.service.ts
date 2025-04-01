@@ -8,9 +8,15 @@ export class QuizService {
   currentQuestion = computed(
     () => this.questions()[this.currentQuestionIndex()]
   );
+  showResults = computed(() => {
+    return this.currentQuestionIndex() === this.questions().length;
+  });
 
   goToNextQuestion(): void {
-    this.currentQuestionIndex.set(this.currentQuestionIndex() + 1);
+    const currentQuestionIndex = this.showResults()
+      ? this.currentQuestionIndex()
+      : this.currentQuestionIndex() + 1;
+    this.currentQuestionIndex.set(currentQuestionIndex);
   }
 
   getMockQuestions(): QuestionInterface[] {

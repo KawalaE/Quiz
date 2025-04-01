@@ -1,4 +1,14 @@
 <div class="quiz">
+  @if(_quizService.showResults()){
+  <div class="results">
+    <div class="congratulations">Congratulations!</div>
+    <div class="results-info">
+      <div>You have completed the quiz.</div>
+      <div>You've got 999 of {{ _quizService.questions().length }} right.</div>
+    </div>
+    <div class="next-button">Restart</div>
+  </div>
+  } @if(!_quizService.showResults()){
   <div>
     <div class="score">
       Question {{ _quizService.currentQuestionIndex() + 1 }}/{{
@@ -10,4 +20,5 @@
       Next question
     </div>
   </div>
+  }
 </div>
