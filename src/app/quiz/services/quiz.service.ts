@@ -5,6 +5,10 @@ import { QuestionInterface } from './../types/quesition.interface';
 export class QuizService {
   questions = signal<QuestionInterface[]>(this.getMockQuestions());
   currentQuestionIndex = signal<number>(0);
+
+  currentAnswer = signal<string | null>(null);
+  correctAnswersCount = signal<number>(0);
+
   currentQuestion = computed(
     () => this.questions()[this.currentQuestionIndex()]
   );
@@ -17,10 +21,23 @@ export class QuizService {
       ? this.currentQuestionIndex()
       : this.currentQuestionIndex() + 1;
     this.currentQuestionIndex.set(currentQuestionIndex);
+    //reset current question
+    this.currentAnswer.set(null);
+  }
+
+  selectAnswer(answerText: string): void {
+    this.currentAnswer.set(answerText);
+    const correctAnswersCount =
+      answerText === this.currentQuestion().correctAnswer
+        ? this.correctAnswersCount() + 1
+        : this.correctAnswersCount();
+
+    this.correctAnswersCount.set(correctAnswersCount);
   }
 
   restartQuestions(): void {
     this.currentQuestionIndex.set(0);
+    this.correctAnswersCount.set(0);
   }
 
   shuffleAnswers(question: QuestionInterface): string[] {
