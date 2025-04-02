@@ -3,9 +3,9 @@
     {{ _quizService.currentQuestion().question }}
   </div>
   <div class="answers">
-    <quiz-answer />
-    <quiz-answer />
-    <quiz-answer />
-    <quiz-answer />
+    @for(currentQuestionAnswear of _quizService.currentQuestionAnswers(); track
+    $index) {
+    <quiz-answer [answerText]="currentQuestionAnswear" [answerIndex]="$index" />
+    }
   </div>
 </div>

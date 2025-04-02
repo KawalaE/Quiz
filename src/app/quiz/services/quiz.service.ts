@@ -19,6 +19,17 @@ export class QuizService {
     this.currentQuestionIndex.set(currentQuestionIndex);
   }
 
+  restartQuestions(): void {
+    this.currentQuestionIndex.set(0);
+  }
+
+  currentQuestionAnswers = computed(() => {
+    return [
+      this.currentQuestion().correctAnswer,
+      ...this.currentQuestion().incorrectAnswers,
+    ];
+  });
+
   getMockQuestions(): QuestionInterface[] {
     return [
       {

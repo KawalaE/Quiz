@@ -6,7 +6,9 @@
       <div>You have completed the quiz.</div>
       <div>You've got 999 of {{ _quizService.questions().length }} right.</div>
     </div>
-    <div class="next-button">Restart</div>
+    <div class="next-button" (click)="_quizService.restartQuestions()">
+      Restart
+    </div>
   </div>
   } @if(!_quizService.showResults()){
   <div>
