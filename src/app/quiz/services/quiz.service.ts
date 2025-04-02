@@ -23,11 +23,19 @@ export class QuizService {
     this.currentQuestionIndex.set(0);
   }
 
-  currentQuestionAnswers = computed(() => {
-    return [
+  shuffleAnswers(question: QuestionInterface): string[] {
+    const unshuffledAnswers = [
       this.currentQuestion().correctAnswer,
       ...this.currentQuestion().incorrectAnswers,
     ];
+    return unshuffledAnswers
+      .map((a) => ({ sort: Math.random(), value: a }))
+      .sort((a, b) => a.sort - b.sort)
+      .map((a) => a.value);
+  }
+
+  currentQuestionAnswers = computed(() => {
+    return this.shuffleAnswers(this.currentQuestion());
   });
 
   getMockQuestions(): QuestionInterface[] {
