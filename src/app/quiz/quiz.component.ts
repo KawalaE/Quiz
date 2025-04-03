@@ -11,4 +11,16 @@ import { QuizService } from './services/quiz.service';
 })
 export class QuizComponent {
   _quizService = inject(QuizService);
+
+  ngOnInit(): void {
+    this._quizService.getQuestions().subscribe({
+      next: (questions) => {
+        this._quizService.questions.set(questions);
+      },
+      error: (err) => {
+        console.log('err', err.message);
+        this._quizService.error.set(err.message);
+      },
+    });
+  }
 }

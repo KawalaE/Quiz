@@ -1,5 +1,13 @@
 <div class="quiz">
-  @if(_quizService.showResults()){
+  @if(_quizService.error()){
+  <div class="results">
+    <div class="congratulations">Server error!</div>
+    <div class="results-info">
+      <div>{{ _quizService.error() }}</div>
+    </div>
+  </div>
+  } @if(_quizService.showResults() && _quizService.currentQuestionIndex() !==
+  0){
   <div class="results">
     <div class="congratulations">Congratulations!</div>
     <div class="results-info">

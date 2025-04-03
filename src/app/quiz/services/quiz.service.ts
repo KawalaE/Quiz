@@ -1,10 +1,15 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { map, Observable } from 'rxjs';
+import { BackendQuestionInterface } from '../types/backendQuestion.interface';
 import { QuestionInterface } from './../types/quesition.interface';
 
 @Injectable({ providedIn: 'root' })
 export class QuizService {
-  questions = signal<QuestionInterface[]>(this.getMockQuestions());
+  http = inject(HttpClient);
+  questions = signal<QuestionInterface[]>([]);
   currentQuestionIndex = signal<number>(0);
+  error = signal<string | null>(null);
 
   currentAnswer = signal<string | null>(null);
   correctAnswersCount = signal<number>(0);
@@ -55,27 +60,28 @@ export class QuizService {
     return this.shuffleAnswers(this.currentQuestion());
   });
 
-  getMockQuestions(): QuestionInterface[] {
-    return [
-      {
-        question: 'What CSS stands for?',
-        incorrectAnswers: [
-          'Computer Style Sheets',
-          'Creative Style Sheets',
-          'Colorful Style Sheets',
-        ],
-        correctAnswer: 'Cascading Style Sheets',
-      },
-      {
-        question:
-          'Where in HTML document it the correct place to referr to style sheets',
-        incorrectAnswers: [
-          'In the <body> section',
-          'At the end of the document',
-          "You can't refer to an external style sheet",
-        ],
-        correctAnswer: 'In the <head> section',
-      },
-    ];
+  getQuestions(): Observable<QuestionInterface[]> {
+    const apiUrl =
+      'https://opentdb.com/api.php?amount=10&category=18&difficulty=medium&type=multiple';
+    return this.http.get<{ results: BackendQuestionInterface[] }>(apiUrl).pipe(
+      map((response) => {
+        return this.normalizeQuestions(response.results);
+      })
+    );
+  }
+
+  normalizeQuestions(
+    backendQuestion: BackendQuestionInterface[]
+  ): QuestionInterface[] {
+    return backendQuestion.map((backendQuestion) => {
+      const incorrectAnswers = backendQuestion.incorrect_answers.map(
+        (incorrectAnswer) => decodeURIComponent(incorrectAnswer)
+      );
+      return {
+        question: decodeURIComponent(backendQuestion.question),
+        correctAnswer: decodeURIComponent(backendQuestion.correct_answer),
+        incorrectAnswers,
+      };
+    });
   }
 }
